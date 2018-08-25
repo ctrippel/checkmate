@@ -1,1 +1,1 @@
-# CheckMate
+# checkmate
