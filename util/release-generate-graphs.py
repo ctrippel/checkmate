@@ -69,14 +69,15 @@ def createEvents(fout):
     if first_inst in br_pred:
       fout.write(" P" + br_pred[first_inst] + ", " + br_out[first_inst])
     else:
-      if address[first_inst] in cacheability:
+      if first_inst in address and address[first_inst] in cacheability: # CJT
         fout.write("." + cacheability[address[first_inst]])
 
-      fout.write(" " + address[first_inst])
-      if address[first_inst] in addr_map:
+      if first_inst in address:
+        fout.write(" " + address[first_inst])
+      if first_inst in address and address[first_inst] in addr_map:
         fout.write("(" + addr_map[address[first_inst]] + ":" + region[addr_map[address[first_inst]]] + ")")
       fout.write("\\n")
-      if address[first_inst] in indexL1:
+      if first_inst in address and address[first_inst] in indexL1:
         fout.write(indexL1[address[first_inst]])
     fout.write("\\n\";pos=\"" + str(col_idx) + ",0.5!\";shape=none];\n")
 
@@ -172,6 +173,7 @@ def createEdges(fout):
              "uhb_spec"  : "pink",
              "usquash"  : "pink",
              "ufence"    : "orange",
+             # "uhb_tc"    : "orange",
            }
     
   edge_id = 0
@@ -390,6 +392,12 @@ def main(argv):
         m = re.search('={(.+?)}', line)
         if m:
           Edge["ufence"] = (m.group(1)).split(", ")
+   
+      # if "Event<:uhb_tc=" in line:
+      #   line = line.replace("$", "")
+      #   m = re.search('={(.+?)}', line)
+      #   if m:
+      #     Edge["uhb_tc"] = (m.group(1)).split(", ")
    
       if "Event<:po=" in line:
         line = line.replace("$", "")
